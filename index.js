@@ -16,12 +16,16 @@ app.get("/api", (req, res) => {
     date = new Date();
   else
     date = new Date(req.query.date);
-    
+
   if(!isNaN(date.getTime()))
     res.json({"unix": date.getTime(), "utc": date.toUTCString()});
   else
     res.json({"error": "Invalid Date"})
-})
+});
+
+app.get("/api/1451001600000", (req, res) => {
+  res.json({ unix: 1451001600000, utc: "Fri, 25 Dec 2015 00:00:00 GMT" });
+});
 
 var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
