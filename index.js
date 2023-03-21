@@ -11,8 +11,11 @@ app.get("/", function (req, res) {
 });
 
 app.get("/api", (req, res) => {
-  let date = new Date(req.query.date)
-  res.json({"unix": date.getTime(), "utc": date.toUTCString()});
+  let date = new Date(req.query.date);
+  if(!isNaN(date.getTime()))
+    res.json({"unix": date.getTime(), "utc": date.toUTCString()});
+  else
+    res.json({"error": "Invalid Date"})
 })
 
 var listener = app.listen(process.env.PORT, function () {
