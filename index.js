@@ -11,7 +11,12 @@ app.get("/", function (req, res) {
 });
 
 app.get("/api", (req, res) => {
-  let date = new Date(req.query.date);
+  let date = null;
+  if(req.query.date == null)
+    date = new Date();
+  else
+    date = new Date(req.query.date);
+    
   if(!isNaN(date.getTime()))
     res.json({"unix": date.getTime(), "utc": date.toUTCString()});
   else
