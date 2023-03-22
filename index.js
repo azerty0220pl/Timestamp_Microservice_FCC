@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const dns = require('dns');
 
 let urls = [];
 
@@ -14,9 +15,12 @@ app.get("/", function (req, res) {
 });
 
 app.route('/api/shorturl').post((req, res) => {
-  console.log(req.body);
-  urls.push(req.body.url);
-  res.json({"original_url": req.body.url, "short_url": urls.length - 1});
+  if(dns.lookup(req.body.url)) {
+    urls.push(req.body.url);
+    res.json({"original_url": req.body.url, "short_url": urls.length - 1});
+  } else {
+    res.json({"error": "invalid url"});
+  }
 });
 
 app.get("/api/shorturl/:index", function (req, res) {
