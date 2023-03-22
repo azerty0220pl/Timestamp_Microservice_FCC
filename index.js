@@ -9,7 +9,7 @@ app.use(express.static('public'));
 app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
-
+/*
 app.get("/api", (req, res) => {
   let date = null;
   if(req.query.date == null)
@@ -38,6 +38,11 @@ app.get("/api/:date", (req, res) => {
     res.json({"unix": date.getTime(), "utc": date.toUTCString()});
   else
     res.json({"error": "Invalid Date"})
+});
+*/
+
+app.get("/api/whoami", (req, res) => {
+  res.json({"ipaddress": req.ip, "language": req.get('Accept-Language'), "software": req.get('User-Agent')})
 });
 
 var listener = app.listen(process.env.PORT, function () {
