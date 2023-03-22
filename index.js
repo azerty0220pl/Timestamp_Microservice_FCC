@@ -1,9 +1,10 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const bodyParser = require('body-parser');
 
 app.use(cors({optionsSuccessStatus: 200}));
-
+app.use(bodyParser.urlencoded({extended: false}))
 app.use(express.static('public'));
 
 app.get("/", function (req, res) {
