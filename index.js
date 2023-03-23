@@ -14,7 +14,8 @@ app.get("/", function (req, res) {
 });
 
 app.route('/api/shorturl').post((req, res) => {
-  if(dns.lookup(req.body.url)) {
+  let regex = /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
+  if(regex.test(req.body.url)) {
     urls.push(req.body.url);
     res.json({"original_url": req.body.url, "short_url": urls.length - 1});
   } else {
