@@ -40,7 +40,7 @@ app.route('/api/users').post((res, req) => {
     done(null, c);
   });
 
-  let user = new User({_id: id, username: req.query.username, count: 0});
+  let user = new User({_id: id, username: req.body.username, count: 0});
 
   user.save().then((doc) => {
     res.json({"username": doc.username, "_id": doc._id.toString()});
