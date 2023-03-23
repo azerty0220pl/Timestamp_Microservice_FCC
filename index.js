@@ -35,22 +35,22 @@ app.get("/", function (req, res) {
 
 app.route('/api/users').post((req, res) => {
   let id = 0;
-  User.countDocuments({}).then((c) => {
+  User.countDocuments({}).then((c, next) => {
     id = c;
     next(null, c);
-  }).catch((err) => { next(err) });
+  }).catch((err, next) => { next(err) });
 
   let user = new User({_id: id, username: req.body.username, count: 0});
 
-  user.save().then((doc) => {
+  user.save().then((doc, next) => {
     res.json({"username": doc.username, "_id": doc._id.toString()});
     next(null, doc);
-  }).catch((err) => { next(err) });;
+  }).catch((err, next) => { next(err) });;
 }).get((req, res) => {
   User.find({}).then((doc) => {
     let data = doc.map((x) => {
       return JSON.parse({"username": x.username, "_id": x._id.toString()});
-    }).catch((err) => { next(err) });
+    }).catch((err, next) => { next(err) });
     res.send(data);
     next(null, doc);
   })
