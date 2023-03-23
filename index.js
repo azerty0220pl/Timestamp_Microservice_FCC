@@ -37,22 +37,22 @@ app.route('/api/users').post((res, req) => {
   let id = 0;
   User.countDocuments({}).then((c) => {
     id = c;
-    done(null, c);
-  });
+    next(null, c);
+  }).catch((err) => { next(err) });
 
   let user = new User({_id: id, username: req.body.username, count: 0});
 
   user.save().then((doc) => {
     res.json({"username": doc.username, "_id": doc._id.toString()});
-    done(null, doc);
-  }).catch((err) => { done(err) });;
+    next(null, doc);
+  }).catch((err) => { next(err) });;
 }).get((req, res) => {
   User.find({}).then((doc) => {
     let data = doc.map((x) => {
       return JSON.parse({"username": x.username, "_id": x._id.toString()});
-    });
+    }).catch((err) => { next(err) });
     res.send(data);
-    done(null, doc);
+    next(null, doc);
   })
 });
 
