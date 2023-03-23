@@ -33,7 +33,7 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
-app.route('/api/users').post((res, req) => {
+app.route('/api/users').post((req, res) => {
   let id = 0;
   User.countDocuments({}).then((c) => {
     id = c;
