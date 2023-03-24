@@ -40,7 +40,6 @@ app.route('/api/users').post((req, res) => {
   count++;
   user.save().then((doc) => {
     res.json({"username": doc.username, "_id": doc._id.toString()});
-    console.log(doc._id.toString());
   }).catch((err) => {
     res.json({"error": "Couldn't save"});
   });
@@ -65,7 +64,8 @@ app.post("/api/users/:id/exercises", (req, res) => {
     if(req.body.date != null)
       date = req.body.date;
     let ex = new Exercise({_id: doc._id.toString() + '-' + doc.count, description: req.body.description, duration: req.body.duration, date: date, user: doc._id});
-
+    
+    console.log({"username": doc.username, "description": ex.description, "duration": ex.duration, date: ex.date, "_id": doc._id});
     doc.overwrite({_id: doc._id, username: doc.username, count: doc.count + 1});
 
     ex.save().then((doc) => {
