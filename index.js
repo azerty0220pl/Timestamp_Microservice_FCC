@@ -55,7 +55,9 @@ app.route('/api/users').post((req, res) => {
 });
 
 app.post('/api/users/:_id/exercises', (req, res) => {
+  console.log("starting");
   let user = User.findById(parseInt(req.param._id)).then((doc) => {
+    console.log("found");
     let date = new Date().toString();
     if(req.body.date != null)
       date = req.body.date;
@@ -64,10 +66,12 @@ app.post('/api/users/:_id/exercises', (req, res) => {
     doc.overwrite({_id: doc._id, username: doc.username, count: doc.count + 1});
 
     ex.save().then((doc) => {
+      console.log("saved");
       res.json({"username": doc.username, "description": ex.description, "duration": ex.duration, date: ex.date, "_id": ex._id});
     }).catch((err) => {
       res.json({"error": "Couldn't save"});
     });
+    console.log("ending");
   }).catch((err) => {
     res.json({"error": "Couldn't find id"});
   });
