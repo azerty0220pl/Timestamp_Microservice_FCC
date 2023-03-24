@@ -51,7 +51,7 @@ app.route('/api/users').post((req, res) => {
 }).get((req, res) => {
   User.find({}).then((doc) => {
     let data = doc.map((x) => {
-      return JSON.parse({"username": x.username, "_id": x._id.toString()});
+      return {"username": x.username, "_id": x._id.toString()};
     });
     res.send(data);
   });
