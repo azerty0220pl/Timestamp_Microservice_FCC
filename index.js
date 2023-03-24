@@ -54,7 +54,7 @@ app.route('/api/users').post((req, res) => {
   });
 });
 
-app.post('/api/users:_id/exercises', (req, res) => {
+app.post('/api/users/:_id/exercises', (req, res) => {
   let user = User.findById(parseInt(req.param._id)).then((doc) => {
     let date = new Date().toString();
     if(req.body.date != null)
