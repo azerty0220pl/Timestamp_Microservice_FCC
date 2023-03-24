@@ -7,6 +7,8 @@ const bodyParser = require('body-parser');
 
 mongoose.connect(process.env['MONGO_URI'], { useNewUrlParser: true, useUnifiedTopology: true });
 
+let count = 0;
+
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
@@ -34,15 +36,7 @@ app.get("/", function (req, res) {
 });
 
 app.route('/api/users').post((req, res) => {
-  console.log('starting post');
-  let id = 0;
-  User.countDocuments({}).then((c) => {
-    console.log('starting count');
-    id = c;
-  });
-  console.log('count end');
-
-  let user = new User({_id: id, username: req.body.username, count: 0});
+  let user = new User({_id: count, username: req.body.username, count: 0});
 
   user.save().then((doc) => {
     console.log('start send');
