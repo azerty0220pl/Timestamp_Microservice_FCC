@@ -36,8 +36,10 @@ app.get("/", function (req, res) {
 });
 
 app.route('/api/users').post((req, res) => {
+  console.log(count);
   let user = new User({_id: count, username: req.body.username, count: 0});
-
+  count++;
+  console.log(count);
   user.save().then((doc) => {
     console.log('start send');
     res.json({"username": doc.username, "_id": doc._id.toString()});
