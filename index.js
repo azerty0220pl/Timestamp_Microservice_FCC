@@ -23,7 +23,7 @@ const exerciseSchema = new Schema({
   description: { type: String, required: true },
   duration: { type: Number, required: true },
   date: { type: String, required: true },
-  user: {type: mongoose.Types.ObjectId, ref: "user"}
+  user: {type: mongoose.Types.ObjectId, ref: "User"}
 });
 const Exercise = mongoose.model("Exercise", exerciseSchema);
 
@@ -57,15 +57,12 @@ app.route('/api/users').post((req, res) => {
 });
 
 app.post("/api/users/:id/exercises", (req, res) => {
-  console.log("starting");
-  console.log(req.params.id);
-  console.log(parseInt(req.params.id));
   let user = User.findById(parseInt(req.params.id)).then((doc) => {
     console.log("found");
     let date = new Date().toString();
     if(req.body.date != null)
       date = req.body.date;
-    let ex = new Exercise({_id: doc._id.toString() + '-' + doc.count, description: req.body.description, duration: req.body.duration, date: date, user: doc._id});
+    let ex = new Exercise({_id: doc._id.toString() + '-' + doc.count.toString(), description: req.body.description, duration: parseInt(req.body.duration), date: date, user: doc._id});
     
     console.log({"username": doc.username, "description": ex.description, "duration": ex.duration, date: ex.date, "_id": doc._id});
 
