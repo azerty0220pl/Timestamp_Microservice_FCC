@@ -40,13 +40,13 @@ app.route('/api/users').post((req, res) => {
   count++;
   user.save().then((doc) => {
     res.json({"username": doc.username, "_id": doc._id.toString()});
+    console.log(doc._id.toString());
   }).catch((err) => {
     res.json({"error": "Couldn't save"});
   });
 }).get((req, res) => {
   User.find({}).then((doc) => {
     let data = doc.map((x) => {
-      console.log(x._id.toString());
       return {"username": x.username, "_id": x._id.toString()};
     });
     res.send(data);
@@ -57,9 +57,9 @@ app.route('/api/users').post((req, res) => {
 
 app.post("/api/users/:id/exercises", (req, res) => {
   console.log("starting");
-  console.log(req.param.id);
-  console.log(parseInt(req.param.id));
-  let user = User.findById(parseInt(req.param.id)).then((doc) => {
+  console.log(req.params.id);
+  console.log(parseInt(req.params.id));
+  let user = User.findById(parseInt(req.params.id)).then((doc) => {
     console.log("found");
     let date = new Date().toString();
     if(req.body.date != null)
