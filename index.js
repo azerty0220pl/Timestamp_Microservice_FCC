@@ -62,7 +62,7 @@ app.post("/api/users/:id/exercises", (req, res) => {
     let date = new Date().toString();
     if(req.body.date != null)
       date = req.body.date;
-    let ex = new Exercise({_id: doc._id.toString() + '-' + doc.count.toString(), description: req.body.description, duration: parseInt(req.body.duration), date: date, user: doc._id});
+    let ex = new Exercise({_id: doc._id.toString() + '-' + doc.count.toString(), description: req.body.description, duration: parseInt(req.body.duration), date: date, user: doc});
     
     console.log({"username": doc.username, "description": ex.description, "duration": ex.duration, date: ex.date, "_id": doc._id});
 
