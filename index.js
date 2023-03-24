@@ -41,7 +41,7 @@ app.route('/api/users').post((req, res) => {
   user.save().then((doc) => {
     res.json({"username": doc.username, "_id": doc._id.toString()});
   }).catch((err) => {
-    res.json({"error": "Couldn't save"});
+    res.json({"error": "Couldn't save", "err": err});
     console.log(err);
   });
 }).get((req, res) => {
@@ -75,12 +75,12 @@ app.post("/api/users/:id/exercises", (req, res) => {
       console.log({"username": doc.username, "description": ex.description, "duration": ex.duration, date: ex.date, "_id": doc._id});
       res.json({"username": doc.username, "description": ex.description, "duration": ex.duration, date: ex.date, "_id": doc._id});
     }).catch((err) => {
-      res.json({"error": "Couldn't save"});
+      res.json({"error": "Couldn't save", "err": err});
       console.log(err);
     });
     console.log("ending");
   }).catch((err) => {
-    res.json({"error": "Couldn't find id"});
+    res.json({"error": "Couldn't find id", "err": err});
     console.log(err);
   });
 });
