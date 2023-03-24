@@ -36,29 +36,26 @@ app.get("/", function (req, res) {
 app.route('/api/users').post((req, res) => {
   console.log('starting post');
   let id = 0;
-  User.countDocuments({}).then((c, next) => {
+  User.countDocuments({}).then((c) => {
     console.log('starting count');
     id = c;
-    next(null, c);
-  }).catch((err, next) => { next(err) });
+  });
   console.log('count end');
 
   let user = new User({_id: id, username: req.body.username, count: 0});
 
-  user.save().then((doc, next) => {
+  user.save().then((doc) => {
     console.log('start send');
     res.json({"username": doc.username, "_id": doc._id.toString()});
-    next(null, doc);
-  }).catch((err, next) => { next(err) });
+  });
   console.log('end post');
 }).get((req, res) => {
   User.find({}).then((doc) => {
     let data = doc.map((x) => {
       return JSON.parse({"username": x.username, "_id": x._id.toString()});
-    }).catch((err, next) => { next(err) });
+    });
     res.send(data);
-    next(null, doc);
-  })
+  });
 });
 
 var listener = app.listen(process.env.PORT, function () {
