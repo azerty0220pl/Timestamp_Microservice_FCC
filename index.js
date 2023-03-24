@@ -43,6 +43,9 @@ app.route('/api/users').post((req, res) => {
   user.save().then((doc) => {
     console.log('start send');
     res.json({"username": doc.username, "_id": doc._id.toString()});
+  }).catch((err) => {
+    console.log('error save');
+    res.json({"username": doc.username, "_id": doc._id.toString()});
   });
   console.log('end post');
 }).get((req, res) => {
