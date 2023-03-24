@@ -42,6 +42,7 @@ app.route('/api/users').post((req, res) => {
     res.json({"username": doc.username, "_id": doc._id.toString()});
   }).catch((err) => {
     res.json({"error": "Couldn't save"});
+    console.log(err);
   });
 }).get((req, res) => {
   User.find({}).then((doc) => {
@@ -51,6 +52,7 @@ app.route('/api/users').post((req, res) => {
     res.send(data);
   }).catch((err) => {
     res.send([]);
+    console.log(err);
   });
 });
 
@@ -74,10 +76,12 @@ app.post("/api/users/:id/exercises", (req, res) => {
       res.json({"username": doc.username, "description": ex.description, "duration": ex.duration, date: ex.date, "_id": doc._id});
     }).catch((err) => {
       res.json({"error": "Couldn't save"});
+      console.log(err);
     });
     console.log("ending");
   }).catch((err) => {
     res.json({"error": "Couldn't find id"});
+    console.log(err);
   });
 });
 
