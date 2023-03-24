@@ -54,6 +54,8 @@ app.route('/api/users').post((req, res) => {
       return {"username": x.username, "_id": x._id.toString()};
     });
     res.send(data);
+  }).catch((err) => {
+    res.send([]);
   });
 });
 
