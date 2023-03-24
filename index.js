@@ -19,7 +19,7 @@ const userSchema = new Schema({
 const User = mongoose.model("User", userSchema);
 
 const exerciseSchema = new Schema({
-  _id: { type: Number, required: true },
+  _id: { type: String, required: true },
   description: { type: String, required: true },
   duration: { type: Number, required: true },
   date: { type: String, required: true },
@@ -36,18 +36,13 @@ app.get("/", function (req, res) {
 });
 
 app.route('/api/users').post((req, res) => {
-  console.log(count);
   let user = new User({_id: count, username: req.body.username, count: 0});
   count++;
-  console.log(count);
   user.save().then((doc) => {
-    console.log('start send');
     res.json({"username": doc.username, "_id": doc._id.toString()});
   }).catch((err) => {
-    console.log('error save');
-    res.json({"username": doc.username, "_id": doc._id.toString()});
+    res.json({"error": "Couldn't save"});
   });
-  console.log('end post');
 }).get((req, res) => {
   User.find({}).then((doc) => {
     let data = doc.map((x) => {
@@ -56,6 +51,24 @@ app.route('/api/users').post((req, res) => {
     res.send(data);
   }).catch((err) => {
     res.send([]);
+  });
+});
+
+app.post('/api/users:_id/exercises', (re1, res) => {
+  let user = User.findById(parseInt(req.param._id)).then((doc) => {
+    let date = new Date().toString();
+    if(req.body.date != null)
+      date = req.body.date;
+    let ex = new Exercise({_id: doc._id.toString() + '-' + doc.count, description: req.body.description, duration: req.body.duration, date: date, user: doc._id});
+
+    doc.overwrite({_id: doc._id, username: doc.username, count: doc.count + 1});
+
+    ex.save().then((doc) => {
+      res.json({"username": doc.username, "description": ex.description, "duration": ex.duration, date: ex.date, "_id": ex._id});
+    }).catch((err) => {
+      res.json({"error": "Couldn't save"});
+    });
+  }).catch((err) => {
   });
 });
 
