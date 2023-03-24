@@ -69,6 +69,7 @@ app.post('/api/users/:_id/exercises', (req, res) => {
       res.json({"error": "Couldn't save"});
     });
   }).catch((err) => {
+    res.json({"error": "Couldn't find id"});
   });
 });
 
