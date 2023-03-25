@@ -23,7 +23,7 @@ const exerciseSchema = new Schema({
   description: { type: String, required: true },
   duration: { type: Number, required: true },
   date: { type: String, required: true },
-  user: {type: mongoose.Types.ObjectId, ref: "User"}
+  user: {type: Number}
 });
 const Exercise = mongoose.model("Exercise", exerciseSchema);
 
@@ -62,7 +62,7 @@ app.post("/api/users/:_id/exercises", (req, res) => {
     let date = new Date().toDateString();
     if(req.body.date != null)
       date = req.body.date;
-    let ex = new Exercise({_id: doc._id.toString() + '-' + doc.count.toString(), description: req.body.description, duration: parseInt(req.body.duration), date: date, user: doc});
+    let ex = new Exercise({_id: doc._id.toString() + '-' + doc.count.toString(), description: req.body.description, duration: parseInt(req.body.duration), date: date, user: doc._id});
     
     console.log({"username": doc.username, "description": ex.description, "duration": ex.duration, date: ex.date, "_id": doc._id});
 
@@ -71,8 +71,8 @@ app.post("/api/users/:_id/exercises", (req, res) => {
 
     ex.save().then((doc) => {
       console.log("saved");
-      console.log({"username": doc.username, "description": ex.description, "duration": ex.duration, date: ex.date, "_id": doc._id});
-      res.json({"username": doc.username, "description": ex.description, "duration": ex.duration, date: ex.date, "_id": doc._id});
+      console.log({"username": doc.username, "description": ex.description, "duration": ex.duration, "date": ex.date, "_id": doc._id});
+      res.json({"username": doc.username, "description": ex.description, "duration": ex.duration, "date": ex.date, "_id": doc._id});
     }).catch((err) => {
       res.json({"error": "Couldn't save", "err": err});
       console.log(err);
@@ -86,7 +86,7 @@ app.post("/api/users/:_id/exercises", (req, res) => {
 
 app.get("/api/users/:_id/logs", (req, res) => {
   User.findById(parseInt(req.params._id)).then((doc) => {
-    Exercise.find({user: doc}).then((ex) => {
+    Exercise.find({user: doc._id}).then((ex) => {
       res.json({"username": doc.username, "count": doc.count, "_id": doc._id, "log": ex.map(x => {return {"description": x.description, "duration": x.duration, "date": x.date}})});
     }).catch((err) => {
       res.json({"error": "Couldn't find exercises", "err": err});
