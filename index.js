@@ -66,9 +66,9 @@ app.post("/api/users/:_id/exercises", (req, res) => {
     let ex = new Exercise({_id: doc._id.toString() + '-' + doc.count.toString(), description: req.body.description, duration: parseInt(req.body.duration), date: date, user: doc._id});
 
     ex.save().then((e) => {
-      res.json({"username": doc.username, "description": e.description, "duration": e.duration, "date": e.date.toDateString(), "_id": doc._id});
+      res.json({"username": doc.username, "description": e.description, "duration": e.duration, "date": e.date.toDateString(), "_id": doc._id.toString()});
       console.log("/api/users/:_id/exercises");
-      console.log({"username": doc.username, "description": e.description, "duration": e.duration, "date": e.date.toDateString(), "_id": doc._id});
+      console.log({"username": doc.username, "description": e.description, "duration": e.duration, "date": e.date.toDateString(), "_id": doc._id.toString()});
       doc.overwrite({username: doc.username, count: doc.count + 1});
       doc.save();
     }).catch((err) => {
@@ -94,7 +94,7 @@ app.get("/api/users/:_id/logs", (req, res) => {
     query = query.find({date : {$lte: new Date(req.query.to)}});
     
     query.exec().then((ex) => {
-      res.json({"username": doc.username, "count": doc.count, "_id": doc._id, "log": ex.map(x => {return {"description": x.description, "duration": x.duration, "date": x.date.toDateString()}})});
+      res.json({"username": doc.username, "count": doc.count, "_id": doc._id.toString(), "log": ex.map(x => {return {"description": x.description, "duration": x.duration, "date": x.date.toDateString()}})});
     }).catch((err) => {
       res.json({"error": "Couldn't find exercises", "err": err});
       console.log(err);
