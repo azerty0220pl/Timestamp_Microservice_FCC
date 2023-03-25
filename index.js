@@ -22,7 +22,7 @@ const exerciseSchema = new Schema({
   _id: { type: String, required: true },
   description: { type: String, required: true },
   duration: { type: Number, required: true },
-  date: { type: String, required: true },
+  date: { type: Date, required: true },
   user: {type: Number}
 });
 const Exercise = mongoose.model("Exercise", exerciseSchema);
@@ -58,26 +58,19 @@ app.route('/api/users').post((req, res) => {
 
 app.post("/api/users/:_id/exercises", (req, res) => {
   User.findById(parseInt(req.params._id)).then((doc) => {
-    console.log("found");
-    let date = new Date().toDateString();
+    let date = new Date();
     if(req.body.date != null)
-      date = Date(req.body.date).toDateString();
+      date = Date(req.body.date);
     let ex = new Exercise({_id: doc._id.toString() + '-' + doc.count.toString(), description: req.body.description, duration: parseInt(req.body.duration), date: date, user: doc._id});
-    
-    console.log({"username": doc.username, "description": ex.description, "duration": ex.duration, date: ex.date, "_id": doc._id});
 
     ex.save().then((e) => {
-      console.log("saved");
-      console.log({"username": doc.username, "description": e.description, "duration": e.duration, "date": e.date, "_id": doc._id});
-      res.json({"username": doc.username, "description": e.description, "duration": e.duration, "date": e.date, "_id": doc._id});
+      res.json({"username": doc.username, "description": e.description, "duration": e.duration, "date": e.date.toDateString(), "_id": doc._id});
       doc.overwrite({username: doc.username, count: doc.count + 1});
       doc.save();
-      console.log("doc " + doc)
     }).catch((err) => {
       res.json({"error": "Couldn't save", "err": err});
       console.log(err);
     });
-    console.log("ending");
   }).catch((err) => {
     res.json({"error": "Couldn't find id", "err": err});
     console.log(err);
@@ -86,7 +79,17 @@ app.post("/api/users/:_id/exercises", (req, res) => {
 
 app.get("/api/users/:_id/logs", (req, res) => {
   User.findById(parseInt(req.params._id)).then((doc) => {
-    Exercise.find({user: doc._id}).then((ex) => {
+    let query = Exercise.find({user: doc._id});
+    if(req.query.limit != null)
+      query = query.limit(parseInt(req.query.limit));
+    if(req.query.from != null)
+      query = query.find({date : {$gte: Date(req.query.from)}});
+    if(req.query.to != null)
+    query = query.find({date : {$lte: Date(req.query.to)}});
+    
+    query.exec().then((ex) => {
+      if(req.query.limit != undefined)
+        ex.limit()
       res.json({"username": doc.username, "count": doc.count, "_id": doc._id, "log": ex.map(x => {return {"description": x.description, "duration": x.duration, "date": x.date}})});
     }).catch((err) => {
       res.json({"error": "Couldn't find exercises", "err": err});
