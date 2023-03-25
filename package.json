@@ -1,5 +1,5 @@
 {
-  "name": "timestamp-microservice",
+  "name": "file-metadata-microservice",
   "author": "Szymon Kokot",
   "version": "0.0.1",
   "description": "An FCC Backend Challenge",
@@ -10,8 +10,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.18.2",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "mongoose": "^7.0.3"
   },
   "repository": {
     "type": "git",
