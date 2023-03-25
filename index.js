@@ -90,7 +90,7 @@ app.get("/api/users/:_id/logs", (req, res) => {
     query.exec().then((ex) => {
       if(req.query.limit != undefined)
         ex.limit()
-      res.json({"username": doc.username, "count": doc.count, "_id": doc._id, "log": ex.map(x => {return {"description": x.description, "duration": x.duration, "date": x.date}})});
+      res.json({"username": doc.username, "count": doc.count, "_id": doc._id, "log": ex.map(x => {return {"description": x.description, "duration": x.duration, "date": x.date.toDateString()}})});
     }).catch((err) => {
       res.json({"error": "Couldn't find exercises", "err": err});
       console.log(err);
