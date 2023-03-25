@@ -58,9 +58,11 @@ app.route('/api/users').post((req, res) => {
 
 app.post("/api/users/:_id/exercises", (req, res) => {
   User.findById(parseInt(req.params._id)).then((doc) => {
-    let date = new Date();
+    let date = null;
     if(req.body.date != null)
-      date = Date(req.body.date);
+      date = new Date(req.body.date);
+    else
+      date = new Date()
     let ex = new Exercise({_id: doc._id.toString() + '-' + doc.count.toString(), description: req.body.description, duration: parseInt(req.body.duration), date: date, user: doc._id});
 
     ex.save().then((e) => {
