@@ -67,6 +67,7 @@ app.post("/api/users/:_id/exercises", (req, res) => {
 
     ex.save().then((e) => {
       res.json({"username": doc.username, "description": e.description, "duration": e.duration, "date": e.date.toDateString(), "_id": doc._id});
+      console.log("/api/users/:_id/exercises");
       console.log({"username": doc.username, "description": e.description, "duration": e.duration, "date": e.date.toDateString(), "_id": doc._id});
       doc.overwrite({username: doc.username, count: doc.count + 1});
       doc.save();
@@ -81,15 +82,16 @@ app.post("/api/users/:_id/exercises", (req, res) => {
 });
 
 app.get("/api/users/:_id/logs", (req, res) => {
+  console.log("/api/users/:_id/logs");
   console.log(req.query);
   User.findById(parseInt(req.params._id)).then((doc) => {
     let query = Exercise.find({user: doc._id});
     if(req.query.limit != null)
       query = query.limit(parseInt(req.query.limit));
     if(req.query.from != null)
-      query = query.find({date : {$gte: Date(req.query.from)}});
+      query = query.find({date : {$gte: new Date(req.query.from)}});
     if(req.query.to != null)
-    query = query.find({date : {$lte: Date(req.query.to)}});
+    query = query.find({date : {$lte: new Date(req.query.to)}});
     
     query.exec().then((ex) => {
       res.json({"username": doc.username, "count": doc.count, "_id": doc._id, "log": ex.map(x => {return {"description": x.description, "duration": x.duration, "date": x.date.toDateString()}})});
