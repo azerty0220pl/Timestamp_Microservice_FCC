@@ -65,6 +65,7 @@ app.post("/api/users/:_id/exercises", (req, res) => {
 
     ex.save().then((e) => {
       res.json({"username": doc.username, "description": e.description, "duration": e.duration, "date": e.date.toDateString(), "_id": doc._id});
+      console.log({"username": doc.username, "description": e.description, "duration": e.duration, "date": e.date.toDateString(), "_id": doc._id});
       doc.overwrite({username: doc.username, count: doc.count + 1});
       doc.save();
     }).catch((err) => {
@@ -78,6 +79,7 @@ app.post("/api/users/:_id/exercises", (req, res) => {
 });
 
 app.get("/api/users/:_id/logs", (req, res) => {
+  console.log(req);
   User.findById(parseInt(req.params._id)).then((doc) => {
     let query = Exercise.find({user: doc._id});
     if(req.query.limit != null)
