@@ -57,7 +57,7 @@ app.route('/api/users').post((req, res) => {
 });
 
 app.post("/api/users/:_id/exercises", (req, res) => {
-  let user = User.findById(parseInt(req.params._id)).then((doc) => {
+  User.findById(parseInt(req.params._id)).then((doc) => {
     console.log("found");
     let date = new Date().toDateString();
     if(req.body.date != null)
@@ -85,9 +85,17 @@ app.post("/api/users/:_id/exercises", (req, res) => {
 });
 
 app.get("/api/users/:_id/logs", (req, res) => {
-  let user = User.findById(parseInt(req.params._id));
-  let exercises = Exercise.find({user: user});
-  res.json({"username": user.username, "count": user.count, "_id": user._id, "log": exercises.map(x => {return {"description": x.description, "duration": x.duration, "date": x.date}})});
+  User.findById(parseInt(req.params._id)).then((doc) => {
+    Exercise.find({user: doc}).then((ex) => {
+      res.json({"username": doc.username, "count": doc.count, "_id": doc._id, "log": ex.map(x => {return {"description": x.description, "duration": x.duration, "date": x.date}})});
+    }).catch((err) => {
+      res.json({"error": "Couldn't find exercises", "err": err});
+      console.log(err);
+    });
+  }).catch((err) => {
+    res.json({"error": "Couldn't find id", "err": err});
+    console.log(err);
+  });
 });
 
 var listener = app.listen(process.env.PORT, function () {
