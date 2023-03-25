@@ -56,10 +56,10 @@ app.route('/api/users').post((req, res) => {
   });
 });
 
-app.post("/api/users/:id/exercises", (req, res) => {
-  let user = User.findById(parseInt(req.params.id)).then((doc) => {
+app.post("/api/users/:_id/exercises", (req, res) => {
+  let user = User.findById(parseInt(req.params._id)).then((doc) => {
     console.log("found");
-    let date = new Date().toString();
+    let date = new Date().toDateString();
     if(req.body.date != null)
       date = req.body.date;
     let ex = new Exercise({_id: doc._id.toString() + '-' + doc.count.toString(), description: req.body.description, duration: parseInt(req.body.duration), date: date, user: doc});
@@ -82,6 +82,12 @@ app.post("/api/users/:id/exercises", (req, res) => {
     res.json({"error": "Couldn't find id", "err": err});
     console.log(err);
   });
+});
+
+app.get("/api/users/:_id/logs", (req, res) => {
+  let user = User.findById(parseInt(req.params._id));
+  let exercises = Exercise.find({user: user});
+  res.json({"username": user.username, "count": user.count, "_id": user._id, "log": exercises.map(x => {return {"description": x.description, "duration": x.duration, "date": x.date}})});
 });
 
 var listener = app.listen(process.env.PORT, function () {
