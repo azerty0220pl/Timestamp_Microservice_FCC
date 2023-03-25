@@ -61,18 +61,18 @@ app.post("/api/users/:_id/exercises", (req, res) => {
     console.log("found");
     let date = new Date().toDateString();
     if(req.body.date != null)
-      date = req.body.date;
+      date = date(req.body.date).toDateString();
     let ex = new Exercise({_id: doc._id.toString() + '-' + doc.count.toString(), description: req.body.description, duration: parseInt(req.body.duration), date: date, user: doc._id});
     
     console.log({"username": doc.username, "description": ex.description, "duration": ex.duration, date: ex.date, "_id": doc._id});
 
-    doc.overwrite({username: doc.username, count: doc.count + 1});
-    doc.save();
-
-    ex.save().then((doc) => {
+    ex.save().then((e) => {
       console.log("saved");
-      console.log({"username": doc.username, "description": ex.description, "duration": ex.duration, "date": ex.date, "_id": doc._id});
-      res.json({"username": doc.username, "description": ex.description, "duration": ex.duration, "date": ex.date, "_id": doc._id});
+      console.log({"username": doc.username, "description": e.description, "duration": e.duration, "date": e.date, "_id": doc._id});
+      res.json({"username": doc.username, "description": e.description, "duration": e.duration, "date": e.date, "_id": doc._id});
+      doc.overwrite({username: doc.username, count: doc.count + 1});
+      doc.save();
+      console.log("doc " + doc)
     }).catch((err) => {
       res.json({"error": "Couldn't save", "err": err});
       console.log(err);
