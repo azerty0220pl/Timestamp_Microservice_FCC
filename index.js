@@ -20,11 +20,10 @@ app.use(session({
   cookie: {
     httpOnly: false,
     sameSite: 'none',
-    secure: true,
+    secure: false,
     maxAge: 24 * 60 * 60 * 1000
   },
-  key: 'express.sid',
-  store: store
+  key: 'express.sid'
 }));
 
 app.get("/", function (req, res) {
