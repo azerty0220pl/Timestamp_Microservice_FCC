@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const upload = multer();
 const app = express();
 const cors = require('cors');
+const session = require('express-session');
 
 app.use(cors({optionsSuccessStatus: 200}));
 
@@ -12,6 +13,19 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: true,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: false,
+    sameSite: 'none',
+    secure: true,
+    maxAge: 24 * 60 * 60 * 1000
+  },
+  key: 'express.sid',
+  store: store
+}));
 
 app.get("/", function (req, res) {
   res.cookie("test", "Hello, World!");
