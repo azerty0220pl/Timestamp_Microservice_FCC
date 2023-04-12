@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(session({
-  secret: process.env.SESSION_SECRET,
+  secret: "process.env.SESSION_SECRET:is a random value",
   resave: true,
   saveUninitialized: true,
   cookie: {
