@@ -26,6 +26,11 @@ app.use(session({
   key: 'express.sid'
 }));
 
+app.use((req, res, next) => {
+  console.log(req.sessionID);
+  next();
+});
+
 app.get("/", function (req, res) {
   res.cookie("test", "Hello, World!");
   res.sendFile(__dirname + '/views/index.html');
