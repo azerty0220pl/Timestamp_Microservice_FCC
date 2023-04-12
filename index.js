@@ -11,7 +11,8 @@ app.use(session({
     httpOnly: true,
     sameSite: 'none',
     secure: true,
-    maxAge: 24 * 60 * 60 * 1000
+    maxAge: 24 * 60 * 60 * 1000,
+    proxy: true
   },
   key: 'express.sid'
 }));
