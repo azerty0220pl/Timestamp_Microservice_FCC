@@ -26,9 +26,9 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
-app.post("/api/fileanalyse", upload.single('upfile'), (req, res) => {
-  res.json({ "name": req.file.originalname, "type": req.file.mimetype, "size": req.file.size });
-})
+app.get("/1", function (req, res) {
+  res.sendFile(__dirname + '/views/index.html');
+});
 
 var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
