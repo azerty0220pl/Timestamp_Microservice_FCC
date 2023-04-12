@@ -3,6 +3,8 @@ const session = require('express-session');
 
 const app = express();
 
+app.set('trust proxy', true);
+
 app.use(session({
   secret: "process.env.SESSION_SECRET:is a random value",
   resave: true,
